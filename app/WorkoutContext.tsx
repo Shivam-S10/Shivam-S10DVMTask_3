@@ -2,6 +2,8 @@ import React, { createContext, useState, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface WorkoutContextType {
+    userweight: number;
+    setuserweight:React.Dispatch<React.SetStateAction<number>>;
     exercises: any[];
     setExercises: React.Dispatch<React.SetStateAction<never[]>>;
     loading: boolean;
@@ -31,7 +33,7 @@ interface WorkoutContextType {
   
   const WorkoutContext = createContext<WorkoutContextType | null>(null);
 
-export const WorkoutProvider = ({ children }) => {
+export const WorkoutProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [exercises, setExercises] = useState([]);
     const [loading, setLoading] = useState(true);
     const [workoutPlans, setWorkoutPlans] = useState({});
@@ -43,7 +45,7 @@ export const WorkoutProvider = ({ children }) => {
     const [isActive, setIsActive] = useState(false);
     const [activeWorkout, setActiveWorkout] = useState(null);
     const [workouts, setWorkout] = useState([]);
-
+    const [userweight, setuserweight] = useState(70); 
     const fetchWorkoutPlans = async () => {
         try {
           const saved = await AsyncStorage.getItem('savedWorkouts');
@@ -72,6 +74,7 @@ export const WorkoutProvider = ({ children }) => {
       modalVisible, setModalVisible, showExistingPlansModal, setShowExistingPlansModal,
       newPlanName, setNewPlanName, timer, setTimer, isActive, setIsActive,
       activeWorkout, setActiveWorkout, fetchWorkoutPlans, fetchCompletedWorkouts,workouts,setWorkout,
+      userweight, setuserweight,
     }}>
       {children}
     </WorkoutContext.Provider>

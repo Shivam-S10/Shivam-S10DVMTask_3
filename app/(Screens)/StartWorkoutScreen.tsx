@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'expo-router';
 import { useWorkoutContext } from '../WorkoutContext';
 export default function StartWorkoutScreen() {
-  const {workoutPlans, fetchWorkoutPlans,loading} = useWorkoutContext();
+  const {workoutPlans, fetchWorkoutPlans,loading,setWorkoutPlans} = useWorkoutContext();
   const router = useRouter();
  
   useEffect(() => {

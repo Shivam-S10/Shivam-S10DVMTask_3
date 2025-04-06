@@ -36,7 +36,7 @@ export default function ExerciseDetail() {
         Alert.alert('Error', 'Failed to load exercise details.');
       }
     }
-  }, [params]);
+  }, [params.exercise]);
 
   if (!exerciseData) {
     return <Text>Error loading exercise data</Text>;

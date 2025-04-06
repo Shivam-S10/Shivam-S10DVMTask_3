@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
+  
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useWorkoutContext} from "../WorkoutContext";
-import { useRouter } from 'expo-router';
+
 
 export default function CompletedWorkoutsScreen() {
   const {completedWorkouts, setCompletedWorkouts} = useWorkoutContext();
-  const router = useRouter();
+  
 
   // Fetch completed workouts when the component mounts
   useEffect(() => {
@@ -30,7 +30,7 @@ export default function CompletedWorkoutsScreen() {
   };
 
   // Format duration in minutes and seconds
-  const formatDuration = (seconds) => {
+  const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}m ${secs}s`;
@@ -46,17 +46,17 @@ export default function CompletedWorkoutsScreen() {
       {/* List of Completed Workouts */}
       <FlatList
   data={completedWorkouts}
-  keyExtractor={(item, index) => index.toString()}
-  renderItem={({ item }) => (
+  keyExtractor={( index) => index.toString()}
+  renderItem={({ item }: { item: { workoutName?: string; planName?: string; duration?: number; date: string; caloriesBurned?: number; exercises?: string[] } }) => (
     <View style={styles.workoutItem}>
       <Text style={styles.workoutName}>{item.workoutName || 'Unknown Workout'}</Text>
       <Text style={styles.detail}>Plan: {item.planName || 'Unnamed Plan'}</Text>
       <Text style={styles.detail}>Duration: {formatDuration(item.duration || 0)}</Text>
       <Text style={styles.detail}>Date: {new Date(item.date).toLocaleDateString()}</Text>
-      <Text style={styles.detail}>Calories Burned: {item.caloriesBurned || 0} cal</Text>
+      <Text style={styles.detail}>Calories Burned: {item.caloriesBurned || 0} kcal</Text>
       <Text style={styles.detail}>Exercises:</Text>
       {item.exercises && item.exercises.length > 0 ? (
-        item.exercises.map((exercise, idx) => (
+        item.exercises.map((exercise: string, idx: number) => (
           <Text key={idx} style={styles.exerciseName}>
             - {exercise}
           </Text>

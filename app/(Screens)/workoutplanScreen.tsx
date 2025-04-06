@@ -46,30 +46,47 @@ export default function WorkoutPlanScreen() {
   };
   const handleEndWorkout = async (completedExercise: { name: string }) => {
     setIsActive(false);
+    const userweight=useWorkoutContext();
+    try{
+      const durationminutes=Math.round(timer/60);
+      const apiResponse=await fetch(
+        `https://api.api-ninjas.com/v1/caloriesburned?activity=${encodeURIComponent(completedExercise.name)}
+        &weight=${userweight}&duration=${durationminutes}`,
+        { headers: { 'X-Api-Key': 'up59jodbZtEvBFalwBXJlQ==rcyaDWAEAlUvKVgq' } }
+      
+    );
+    const data=await apiResponse.json();
+    const caloriesBurned = data[0]?.total_caloriesburned || Math.round(200 * timer/3600);
   
-    // Calculate calories burned (200 calories per hour)
-    const hoursSpent = timer / 3600; // Convert seconds to hours
-    const caloriesBurned = Math.round(200 * hoursSpent);
+    
+   
   
-    // Save completed workout with enhanced details
+   
+  
     const completedWorkout = {
       workoutName: completedExercise.name, // Name of the specific exercise
       planName: params.planName, // Workout plan name
       duration: timer, // Duration in seconds
       date: new Date().toISOString(),
-      caloriesBurned: caloriesBurned, // Calories burned
+      caloriesburned: caloriesBurned, 
       exercises: [completedExercise.name] // Save actual exercise name
     };
-  
+    
     try {
       const existing = await AsyncStorage.getItem('completedWorkouts');
       const completed = existing ? JSON.parse(existing) : [];
       completed.push(completedWorkout);
       await AsyncStorage.setItem('completedWorkouts', JSON.stringify(completed));
+      router.push('/(tabs)/two');
       Alert.alert('Success', 'Workout saved successfully!');
     } catch (error) {
       console.error('Error saving workout:', error);
     }
+  }
+  catch (error){
+    console.error("Calorie Calculation Failed:",error);
+    const caloriesBurned = Math.round(200 * (timer / 3600));
+  }
   
     router.push('/');
   };
@@ -83,7 +100,7 @@ export default function WorkoutPlanScreen() {
         <Text style={styles.header}>
           {isActive ? activeWorkout?.name : params.planName}
         </Text>
-    
+     
         {isActive ? (
           <View style={styles.timerContainer}>
             <Text style={styles.timer}>{Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}</Text>
@@ -103,6 +120,7 @@ export default function WorkoutPlanScreen() {
                   <Text style={styles.workoutDetails}>{item.equipment}</Text>
                 </View>
               </TouchableOpacity>
+              
               {isActive && (
                 <TouchableOpacity
                   style={styles.endButton}
@@ -115,14 +133,17 @@ export default function WorkoutPlanScreen() {
           )}
         />
         
-      )}
+        
+      )
+      }
+    
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-
+  
   header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   workoutItem: {
     padding: 15,

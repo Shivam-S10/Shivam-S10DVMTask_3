@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
@@ -30,7 +31,9 @@ export default function ProfileScreen() {
     }
   };
 
-  const handlePlanPress = (planName) => {
+  const handlePlanPress = (planName: string) => {
+
+
     router.push({
       pathname: '/(Screens)/workoutplanScreen',
       params: { planName },
@@ -38,9 +41,14 @@ export default function ProfileScreen() {
   };
 
   const addNewPlan = async () => {
-    if (!newPlanName.trim()) return;
-
-    if (workoutPlans[newPlanName]) return;
+    if (!newPlanName.trim()) {
+      Alert.alert('Error', 'Please enter a valid plan name.');
+      return;
+    }
+    if (workoutPlans[newPlanName]) {
+      Alert.alert('Error', 'A workout plan with this name already exists.');
+      return;
+    }
 
     const updatedPlans = { ...workoutPlans, [newPlanName]: [] };
     try {
@@ -86,6 +94,11 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         )}
       />
+      
+
+      <Text style={styles.para}>Instructions: Please click on the name of any one of these workout plans to open
+        and view the workouts in it
+      </Text>
 
       {/* Completed Workouts Button */}
       <TouchableOpacity
@@ -101,6 +114,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: 'black' },
   header: { fontSize: 24, fontWeight: 'bold', color: 'white', marginBottom: 20 },
+  para:{color: 'white', fontSize: 16, marginBottom: 20},
   addPlanContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   input: {
     flex: 1,

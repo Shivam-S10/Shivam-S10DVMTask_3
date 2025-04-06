@@ -60,7 +60,7 @@ export default function DashboardScreen() {
       ) : (
         <FlatList
           data={exercises}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.exerciseItem}
