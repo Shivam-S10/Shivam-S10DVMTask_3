@@ -6,7 +6,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
 
+
 import { useColorScheme } from '@/components/useColorScheme';
+import { WorkoutProvider } from './WorkoutContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -49,18 +51,16 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
+    <WorkoutProvider>
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack
-        screenOptions={{  
-          headerShown: false,
-        }}>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-        <Stack.Screen
-          name="(Screens)"
-          options={{ title: 'Exercise Detail' }}
-        />
-      </Stack>
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+      <Stack.Screen name="(Screens)/workoutplanScreen" />
+      <Stack.Screen name="(Screens)/StartWorkoutScreen" />
+      <Stack.Screen name="(Screens)/ExcerciseDetail" />
+    </Stack>
     </ThemeProvider>
+    </WorkoutProvider>
   );
 }

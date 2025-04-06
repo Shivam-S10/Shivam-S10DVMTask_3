@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,12 +7,14 @@ import {
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useWorkoutContext } from '../WorkoutContext';
 
 export default function DashboardScreen() {
-  const [exercises, setExercises] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // Destructure the context properly
+  const { exercises, setExercises, loading, setLoading } = useWorkoutContext();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export default function DashboardScreen() {
         );
         const data = await response.json();
         setExercises(data);
-        AsyncStorage.setItem('exercises', JSON.stringify(data));
+        await AsyncStorage.setItem('exercises', JSON.stringify(data));
       }
     } catch (error) {
       console.error('Error fetching exercises:', error);
@@ -45,19 +47,23 @@ export default function DashboardScreen() {
       <Text style={styles.header}>Dashboard</Text>
 
       {/* Start New Workout Button */}
-      <Link href="/(Screens)/StartWorkoutScreen" style={styles.startButton}>
+      <TouchableOpacity
+        style={styles.startButton}
+        onPress={() => router.push('/(Screens)/StartWorkoutScreen')}
+      >
         <Text style={styles.startButtonText}>Start New Workout</Text>
-      </Link>
+      </TouchableOpacity>
 
-      {/* Exercises List */}
+    
       {loading ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#007AFF" />
       ) : (
         <FlatList
           data={exercises}
-          keyExtractor={(item) => item.name}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
+              style={styles.exerciseItem}
               onPress={() =>
                 router.push({
                   pathname: '/(Screens)/ExcerciseDetail',
@@ -65,7 +71,7 @@ export default function DashboardScreen() {
                 })
               }
             >
-              <Text style={styles.exerciseItem}>{item.name}</Text>
+              <Text>{item.name}</Text>
             </TouchableOpacity>
           )}
         />

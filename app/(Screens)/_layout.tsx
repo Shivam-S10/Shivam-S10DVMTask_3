@@ -1,11 +1,12 @@
 import { Stack } from 'expo-router';
 import {StyleSheet} from 'react-native';
+import { WorkoutProvider } from '../WorkoutContext'; 
 export default function Layout() {
     const styles = StyleSheet.create({
         container: {
           flex: 1,
           padding: 20,
-          backgroundColor: 'white', // Set the background color to white
+          backgroundColor: 'white',
         },
         header: {
           fontSize: 24,
@@ -18,13 +19,14 @@ export default function Layout() {
       });
       
   return (
+  <WorkoutProvider>
     <Stack>
       <Stack.Screen
-        name="ExerciseDetail"
+        name="ExcerciseDetail"
         options={{ title: 'Exercise Details' }}
       />
       <Stack.Screen
-        name="WorkoutPlanScreen"
+        name="workoutplanScreen"
         options={{ title: 'Workout Plan' }}
       />
       <Stack.Screen 
@@ -32,9 +34,11 @@ export default function Layout() {
       options={{ title: 'Start Workout' }}
       />
       <Stack.Screen
-      name="CompletedWorkoutsScreen"
+      name="CompletedWorkouts"
       options={{ title: 'Completed Workouts' }}
       />
     </Stack>
+    
+  </WorkoutProvider> 
   );
 }

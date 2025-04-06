@@ -2,6 +2,7 @@ import React from 'react';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Link, Tabs } from 'expo-router';
 import { Pressable,Alert } from 'react-native';
+import { WorkoutProvider } from '../WorkoutContext';
 
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -19,6 +20,7 @@ export default function TabLayout() {
 
 
   return (
+    <WorkoutProvider>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -55,5 +57,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    </WorkoutProvider>
   );
 }

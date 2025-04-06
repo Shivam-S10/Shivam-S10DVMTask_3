@@ -1,45 +1,43 @@
-// Create a new file: app/(screens)/StartWorkoutScreen.tsx
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Link, useRouter } from 'expo-router';
-
+import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator
+} from 'react-native';
+import { useRouter } from 'expo-router';
+import { useWorkoutContext } from '../WorkoutContext';
 export default function StartWorkoutScreen() {
-  const [workoutPlans, setWorkoutPlans] = useState({});
+  const {workoutPlans, fetchWorkoutPlans,loading} = useWorkoutContext();
   const router = useRouter();
-
+ 
   useEffect(() => {
     fetchWorkoutPlans();
   }, []);
-  const handlePlanPress = (planName) => {
-    // Navigate to WorkoutPlanScreen with the selected plan name
+  const handlePlanPress = (planName: string) => {
+    
     router.push({
       pathname: '/(Screens)/workoutplanScreen', 
       params: { planName },
     });
   };
-
-  const fetchWorkoutPlans = async () => {
-    try {
-      const savedPlans = await AsyncStorage.getItem('savedWorkouts');
-      setWorkoutPlans(savedPlans ? JSON.parse(savedPlans) : {});
-    } catch (error) {
-      console.error('Error fetching workout plans:', error);
-    }
-  };
+  if (loading) {
+    return <ActivityIndicator size="large" style={{ flex: 1 }} />;
+  }
 
   return (
     <View style={styles.container}>
-      
-
       <Text style={styles.header}>Select Workout Plan</Text>
+      
       <FlatList
         data={Object.keys(workoutPlans)}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
           <TouchableOpacity
-          style={styles.planItem}
-          onPress={() => handlePlanPress(item)}
+            style={styles.planItem}
+            onPress={() => handlePlanPress(item)}
           >
             <Text style={styles.planName}>{item}</Text>
             <Text style={styles.workoutCount}>
@@ -48,12 +46,13 @@ export default function StartWorkoutScreen() {
           </TouchableOpacity>
         )}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>No workout plans available</Text>
+          <Text style={styles.emptyText}>No workout plans found</Text>
         }
       />
     </View>
   );
-}
+};
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff' },

@@ -9,10 +9,11 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
+import { useWorkoutContext } from '../WorkoutContext';
 
 export default function ProfileScreen() {
-  const [workoutPlans, setWorkoutPlans] = useState({});
-  const [newPlanName, setNewPlanName] = useState('');
+  const {workoutPlans, setWorkoutPlans} = useWorkoutContext();
+  const {newPlanName, setNewPlanName} = useWorkoutContext();
   const router = useRouter();
 
   useEffect(() => {

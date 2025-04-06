@@ -1,16 +1,16 @@
 // Update app/(screens)/workoutplanScreen.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity,Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-
+import { useWorkoutContext } from '../WorkoutContext';
 export default function WorkoutPlanScreen() {
-  const [workouts, setWorkouts] = useState([]);
-  const [timer, setTimer] = useState(0);
-  const [isActive, setIsActive] = useState(false);
+  const {workouts, setWorkout}= useWorkoutContext();
+  const {timer, setTimer} = useWorkoutContext();
+  const {isActive, setIsActive} = useWorkoutContext();
   const params = useLocalSearchParams();
   const router = useRouter();
-  const [activeWorkout, setActiveWorkout] = useState(null); // Store the active workout
+  const {activeWorkout, setActiveWorkout} = useWorkoutContext(); 
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -32,7 +32,7 @@ export default function WorkoutPlanScreen() {
     try {
       const savedPlans = await AsyncStorage.getItem('savedWorkouts');
       const parsedPlans = savedPlans ? JSON.parse(savedPlans) : {};
-      setWorkouts(parsedPlans[planName] || []);
+      setWorkout(parsedPlans[planName] || []);
     } catch (error) {
       console.error("Error fetching workouts:", error);
     }
@@ -41,9 +41,10 @@ export default function WorkoutPlanScreen() {
   const handleStartWorkout = (workout: any) => {
     setIsActive(true);
     setTimer(0);
-    setActiveWorkout(workout); // Store which workout is active
+    setActiveWorkout(workout); //Set the active workout to the selected workout
+    Alert.alert('Workout Started', `You are now doing ${workout.name}`);
   };
-  const handleEndWorkout = async (completedExercise) => {
+  const handleEndWorkout = async (completedExercise: { name: string }) => {
     setIsActive(false);
   
     // Calculate calories burned (200 calories per hour)
@@ -86,14 +87,14 @@ export default function WorkoutPlanScreen() {
         {isActive ? (
           <View style={styles.timerContainer}>
             <Text style={styles.timer}>{Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}</Text>
-            <TouchableOpacity style={styles.endButton} onPress={handleEndWorkout}>
+            <TouchableOpacity style={styles.endButton} onPress={() => handleEndWorkout(activeWorkout)}>
               <Text style={styles.endButtonText}>End Workout</Text>
             </TouchableOpacity>
           </View>
         ) : (
           <FlatList
           data={workouts}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(index) => index.toString()}
           renderItem={({ item }) => (
             <View>
               <TouchableOpacity onPress={() => handleStartWorkout(item)}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React ,{useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -11,31 +11,36 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useWorkoutContext } from '../WorkoutContext';
 export default function ExerciseDetail() {
   const params = useLocalSearchParams();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [showExistingPlansModal, setShowExistingPlansModal] = useState(false);
-  const [newPlanName, setNewPlanName] = useState('');
-  const [workoutPlans, setWorkoutPlans] = useState({});
+  const {
+    modalVisible,
+    setModalVisible,
+    showExistingPlansModal,
+    setShowExistingPlansModal,
+    newPlanName,
+    setNewPlanName,
+    workoutPlans,
+    setWorkoutPlans,
+    fetchWorkoutPlans,
+  } = useWorkoutContext();
+  const [exerciseData, setExerciseData] = React.useState<{ name: string; type: string; muscle: string; equipment: string; instructions: string } | null>(null);
+  useEffect(() => {
+    if (params?.exercise) {
+      try {
+        const parsedData = JSON.parse(params.exercise as string);
+        setExerciseData(parsedData);
+      } catch (error) {
+        console.error('Error parsing exercise data:', error);
+        Alert.alert('Error', 'Failed to load exercise details.');
+      }
+    }
+  }, [params]);
 
-  if (!params || !('exercise' in params)) {
-    return <Text>No exercise data available.</Text>;
-  }
-
-  let exerciseData;
-  try {
-    exerciseData = JSON.parse(params.exercise as string);
-  } catch (error) {
+  if (!exerciseData) {
     return <Text>Error loading exercise data</Text>;
   }
-
-  const fetchWorkoutPlans = async () => {
-    const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
-    setWorkoutPlans(savedWorkouts ? JSON.parse(savedWorkouts) : {});
-  };
-
-  
 
   const handleAddWorkout = async () => {
     await fetchWorkoutPlans();
@@ -180,72 +185,70 @@ export default function ExerciseDetail() {
     color: '#FFFFFF', // White text for readability
   },
 });
-  return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
-      <View style={styles.container}>
-        <Text style={styles.header}>{exerciseData.name}</Text>
-        <Text>Type: {exerciseData.type}</Text>
-        <Text>Muscle Group: {exerciseData.muscle}</Text>
-        <Text>Equipment: {exerciseData.equipment}</Text>
-        <ScrollView style={styles.instructionsContainer}>
-        <Text style={styles.instructions}>Instructions: {exerciseData.instructions}</Text>
-      </ScrollView>
-      <TouchableOpacity onPress={handleAddWorkout} style={styles.addButton}>
-        <Text style={styles.addButtonText}>ADD TO WORKOUT PLAN</Text>
-      </TouchableOpacity>
+return (
+    <View style={styles.container}>
+      <Text style={styles.header}>{exerciseData.name}</Text>
+      <Text>Type: {exerciseData.type}</Text>
+      <Text>Muscle Group: {exerciseData.muscle}</Text>
+      <Text>Equipment: {exerciseData.equipment}</Text>
+    <ScrollView style={styles.instructionsContainer}>
+      <Text style={styles.instructions}>Instructions: {exerciseData.instructions}</Text>
+    </ScrollView>
+    <TouchableOpacity onPress={handleAddWorkout} style={styles.addButton}>
+      <Text style={styles.addButtonText}>ADD TO WORKOUT PLAN</Text>
+    </TouchableOpacity>
 
-      {/* Create New Plan Modal */}
-      <Modal visible={modalVisible} transparent animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Create New Plan</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter plan name"
-              placeholderTextColor="#888"
-              value={newPlanName}
-              onChangeText={setNewPlanName}
-            />
-            <View style={styles.modalButtonContainer}>
-              <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.createButton} onPress={createNewPlan}>
-                <Text style={styles.buttonText}>Create</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      {/* Existing Plans Modal */}
-      <Modal visible={showExistingPlansModal} transparent animationType="slide">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Select Existing Plan</Text>
-            <ScrollView style={styles.plansList}>
-              {Object.keys(workoutPlans).map((planName) => (
-                <TouchableOpacity
-                  key={planName}
-                  style={styles.planItem}
-                  onPress={() => addToExistingPlan(planName)}
-                >
-                  <Text style={styles.planText}>{planName}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-            <TouchableOpacity 
-              style={styles.cancelButton} 
-              onPress={() => setShowExistingPlansModal(false)}
-            >
+    {/* Create New Plan Modal */}
+    <Modal visible={modalVisible} transparent animationType="slide">
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Create New Plan</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter plan name"
+            placeholderTextColor="#888"
+            value={newPlanName}
+            onChangeText={setNewPlanName}
+          />
+          <View style={styles.modalButtonContainer}>
+            <TouchableOpacity style={styles.cancelButton} onPress={() => setModalVisible(false)}>
               <Text style={styles.buttonText}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.createButton} onPress={createNewPlan}>
+              <Text style={styles.buttonText}>Create</Text>
             </TouchableOpacity>
           </View>
         </View>
-      </Modal>
-    </View>
-    </ScrollView>
-  );
+      </View>
+    </Modal>
+
+    {/* Existing Plans Modal */}
+    <Modal visible={showExistingPlansModal} transparent animationType="slide">
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalTitle}>Select Existing Plan</Text>
+          <ScrollView style={styles.plansList}>
+            {Object.keys(workoutPlans).map((planName) => (
+              <TouchableOpacity
+                key={planName}
+                style={styles.planItem}
+                onPress={() => addToExistingPlan(planName)}
+              >
+                <Text style={styles.planText}>{planName}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+          <TouchableOpacity 
+            style={styles.cancelButton} 
+            onPress={() => setShowExistingPlansModal(false)}
+          >
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  </View>
+);
 }
 
 

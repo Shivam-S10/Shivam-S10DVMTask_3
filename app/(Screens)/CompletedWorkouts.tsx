@@ -7,15 +7,16 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useWorkoutContext} from "../WorkoutContext";
 import { useRouter } from 'expo-router';
 
 export default function CompletedWorkoutsScreen() {
-  const [completedWorkouts, setCompletedWorkouts] = useState([]);
+  const {completedWorkouts, setCompletedWorkouts} = useWorkoutContext();
   const router = useRouter();
 
   // Fetch completed workouts when the component mounts
   useEffect(() => {
-    fetchCompletedWorkouts();
+    fetchCompletedWorkouts()
   }, []);
 
   // Fetch completed workouts from AsyncStorage
