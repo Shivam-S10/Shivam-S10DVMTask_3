@@ -44,7 +44,7 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Dashboard</Text>
+      
 
       {/* Start New Workout Button */}
       <TouchableOpacity
@@ -81,7 +81,7 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 20, backgroundColor: 'yellow' },
   header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   startButton: {
     backgroundColor: '#007AFF',
@@ -96,5 +96,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    backgroundColor: 'White',
   },
 });

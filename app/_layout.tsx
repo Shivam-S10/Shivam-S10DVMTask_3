@@ -53,12 +53,12 @@ function RootLayoutNav() {
   return (
     <WorkoutProvider>
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
       <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      <Stack.Screen name="(Screens)/workoutplanScreen" />
-      <Stack.Screen name="(Screens)/StartWorkoutScreen" />
-      <Stack.Screen name="(Screens)/ExcerciseDetail" />
+      <Stack.Screen name="(Screens)/workoutplanScreen" options={{headerShown:false}}/>
+      <Stack.Screen name="(Screens)/StartWorkoutScreen" options={{headerShown:false}}/>
+      <Stack.Screen name="(Screens)/ExcerciseDetail" options={{headerShown:false}}/>
     </Stack>
     </ThemeProvider>
     </WorkoutProvider>

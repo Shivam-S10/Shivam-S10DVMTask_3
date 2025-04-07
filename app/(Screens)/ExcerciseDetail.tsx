@@ -75,7 +75,6 @@ export default function ExerciseDetail() {
       Alert.alert('Error', 'Please enter a valid plan name.');
       return;
     }
-
     if (workoutPlans[newPlanName]) {
       Alert.alert('Error', 'A workout plan with this name already exists.');
       return;
@@ -85,11 +84,15 @@ export default function ExerciseDetail() {
       ...workoutPlans,
       [newPlanName]: [exerciseData],
     };
+    try {
     await AsyncStorage.setItem('savedWorkouts', JSON.stringify(updatedPlans));
     setWorkoutPlans(updatedPlans);
     setNewPlanName('');
     setModalVisible(false);
     Alert.alert('Success', `Created "${newPlanName}" and added the workout!`);
+  } catch (error){
+    console.error("Error creating new workout plan :", error);
+  }
   };
   const styles = StyleSheet.create({
     container: { flex: 1, padding: 20, backgroundColor: 'white' },

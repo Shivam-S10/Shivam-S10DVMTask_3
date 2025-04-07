@@ -7,15 +7,20 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native';
+
 import { useRouter } from 'expo-router';
 import { useWorkoutContext } from '../WorkoutContext';
 export default function StartWorkoutScreen() {
   const {workoutPlans, fetchWorkoutPlans,loading,setWorkoutPlans} = useWorkoutContext();
   const router = useRouter();
- 
+
+  const selectPlans =  
+Object.keys(workoutPlans).filter((planName)=> 
+  workoutPlans[planName].length > 0);
   useEffect(() => {
     fetchWorkoutPlans();
   }, []);
+
   const handlePlanPress = (planName: string) => {
     
     router.push({
@@ -32,7 +37,7 @@ export default function StartWorkoutScreen() {
       <Text style={styles.header}>Select Workout Plan</Text>
       
       <FlatList
-        data={Object.keys(workoutPlans)}
+        data={selectPlans}
         keyExtractor={(item) => item}
         renderItem={({ item }) => (
           <TouchableOpacity
@@ -46,12 +51,13 @@ export default function StartWorkoutScreen() {
           </TouchableOpacity>
         )}
         ListEmptyComponent={
-          <Text style={styles.emptyText}>No workout plans found</Text>
+          <Text style={styles.emptyText}>No non-empty workout plans found</Text>
         }
       />
     </View>
   );
 };
+
 
 
 const styles = StyleSheet.create({

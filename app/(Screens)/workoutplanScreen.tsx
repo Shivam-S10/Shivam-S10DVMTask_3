@@ -45,51 +45,43 @@ export default function WorkoutPlanScreen() {
     Alert.alert('Workout Started', `You are now doing ${workout.name}`);
   };
   const handleEndWorkout = async (completedExercise: { name: string }) => {
-    setIsActive(false);
-    const userweight=useWorkoutContext();
-    try{
-      const durationminutes=Math.round(timer/60);
-      const apiResponse=await fetch(
-        `https://api.api-ninjas.com/v1/caloriesburned?activity=${encodeURIComponent(completedExercise.name)}
-        &weight=${userweight}&duration=${durationminutes}`,
-        { headers: { 'X-Api-Key': 'up59jodbZtEvBFalwBXJlQ==rcyaDWAEAlUvKVgq' } }
-      
-    );
-    const data=await apiResponse.json();
-    const caloriesBurned = data[0]?.total_caloriesburned || Math.round(200 * timer/3600);
-  
-    
-   
-  
-   
-  
-    const completedWorkout = {
-      workoutName: completedExercise.name, // Name of the specific exercise
-      planName: params.planName, // Workout plan name
-      duration: timer, // Duration in seconds
-      date: new Date().toISOString(),
-      caloriesburned: caloriesBurned, 
-      exercises: [completedExercise.name] // Save actual exercise name
-    };
-    
+    setIsActive(false); // Stop the timer
     try {
+      const durationMinutes = Math.round(timer / 60);
+      const userWeight = 70; // Replace this with dynamic user weight if available
+  
+      // Fetch calories burned using API
+      const apiResponse = await fetch(
+        `https://api.api-ninjas.com/v1/caloriesburned?activity=${encodeURIComponent(completedExercise.name)}&weight=${userWeight}&duration=${durationMinutes}`,
+        { headers: { 'X-Api-Key': 'up59jodbZtEvBFalwBXJlQ==rcyaDWAEAlUvKVgq' } }
+      );
+      const data = await apiResponse.json();
+      const caloriesBurned = data[0]?.total_caloriesburned || Math.round(200 * timer / 3600);
+  
+      // Create completed workout object
+      const completedWorkout = {
+        workoutName: completedExercise.name,
+        planName: params.planName,
+        duration: timer, // Duration in seconds
+        date: new Date().toISOString(),
+        caloriesBurned,
+        exercises: [completedExercise.name],
+      };
+  
+      // Save to AsyncStorage
       const existing = await AsyncStorage.getItem('completedWorkouts');
       const completed = existing ? JSON.parse(existing) : [];
       completed.push(completedWorkout);
       await AsyncStorage.setItem('completedWorkouts', JSON.stringify(completed));
-      router.push('/(tabs)/two');
+  
       Alert.alert('Success', 'Workout saved successfully!');
+      router.push('/(Screens)/CompletedWorkouts'); // Navigate to Completed Workouts page
     } catch (error) {
       console.error('Error saving workout:', error);
+      Alert.alert('Error', 'Failed to save workout.');
     }
-  }
-  catch (error){
-    console.error("Calorie Calculation Failed:",error);
-    const caloriesBurned = Math.round(200 * (timer / 3600));
-  }
-  
-    router.push('/');
   };
+  
   
   
   

@@ -19,8 +19,8 @@ export default function Layout() {
       });
       
   return (
-  <WorkoutProvider>
-    <Stack>
+  
+    <Stack >
       <Stack.Screen
         name="ExcerciseDetail"
         options={{ title: 'Exercise Details' }}
@@ -39,6 +39,6 @@ export default function Layout() {
       />
     </Stack>
     
-  </WorkoutProvider> 
+  
   );
 }
