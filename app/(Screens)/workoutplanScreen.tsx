@@ -134,7 +134,7 @@ export default function WorkoutPlanScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
+  container: { flex: 1, padding: 20, backgroundColor: 'black' },
   
   header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   workoutItem: {

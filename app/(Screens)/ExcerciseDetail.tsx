@@ -95,13 +95,13 @@ export default function ExerciseDetail() {
   }
   };
   const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20, backgroundColor: 'white' },
+    container: { flex: 1, padding: 20, backgroundColor: 'black' },
     addButton: { color: 'white', backgroundColor: 'blue', padding: 15, borderRadius: 8, marginTop: 20 },
     addButtonText: { color: 'white', fontSize: 18, textAlign: 'center' },
-  
+   para : { color: 'white', fontSize: 16, marginBottom: 10 },
   
     scrollContainer: { paddingBottom: 20 }, // Ensures scrollable content
-    header: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+    header: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 , color: 'white'},
     instructions: { marginTop: 10, fontSize: 16, lineHeight: 24 },
     modalContainer: {
       flex: 1,
@@ -191,9 +191,9 @@ export default function ExerciseDetail() {
 return (
     <View style={styles.container}>
       <Text style={styles.header}>{exerciseData.name}</Text>
-      <Text>Type: {exerciseData.type}</Text>
-      <Text>Muscle Group: {exerciseData.muscle}</Text>
-      <Text>Equipment: {exerciseData.equipment}</Text>
+      <Text style={styles.para}>Type: {exerciseData.type}</Text>
+      <Text style={styles.para}>Muscle Group: {exerciseData.muscle}</Text>
+      <Text style={styles.para}>Equipment: {exerciseData.equipment}</Text>
     <ScrollView style={styles.instructionsContainer}>
       <Text style={styles.instructions}>Instructions: {exerciseData.instructions}</Text>
     </ScrollView>

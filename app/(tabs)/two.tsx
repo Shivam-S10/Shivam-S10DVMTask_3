@@ -23,15 +23,12 @@ export default function ProfileScreen() {
   useFocusEffect(
     React.useCallback(() => {
       fetchSavedWorkouts();
+      return () => {
+        setNewPlanName('');
+      }
+
     }, [])
   );
-  useEffect(() => {
-    if (!modalVisible) {
-      setNewPlanName(''); // Clear input when modal closes
-    }
-  }, [modalVisible]);
-  
-
   const handleRemovePlan = async (planName: string) => {
     Alert.alert(
       "Confirm Removal",
@@ -83,8 +80,8 @@ export default function ProfileScreen() {
     fetchSavedWorkouts();
   }, []);
   const handleOutsideTap = () => {
-    setNewPlanName(' ');
-    Keyboard.dismiss
+    setNewPlanName('');
+    Keyboard.dismiss();
   }
 
   const handlePlanPress = (planName: string) => {
@@ -119,22 +116,24 @@ return;
 
   return (
     <TouchableWithoutFeedback onPress={handleOutsideTap}>
-    <View style={styles.container}>
-      <Text style={styles.header}>Your Workout Plans</Text>
-
-      {/* Add New Plan Section */}
-      <View style={styles.addPlanContainer}>
+       <View style={styles.container}>
+       <Text style={styles.header}>Your Workout Plans</Text>
+     <View style={styles.addPlanContainer}>
         <TextInput
-          placeholder="Enter new plan name"
-          value={newPlanName}
-          onChangeText={setNewPlanName}
           style={styles.input}
-          placeholderTextColor="#888"
+          placeholder="Enter plan name"
+          placeholderTextColor="#aaa"
+          value={newPlanName}
+          onChangeText={(text) => setNewPlanName(text)}
         />
-        <TouchableOpacity onPress={addNewPlan} style={styles.addButton}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={addNewPlan}
+        >
           <Text style={styles.addButtonText}>Add Plan</Text>
         </TouchableOpacity>
       </View>
+
 
       {/* List of Plans */}
       <FlatList
@@ -161,9 +160,13 @@ return;
 />
       
 
-      <Text style={styles.para}>Instructions: Please click on the name of any one of these workout plans to open
-        and view the workouts in it
-      </Text>
+{Object.keys(workoutPlans).length > 0 ? (
+        <Text style={styles.para}>
+          Please click on the name of any one of these workout plans to open and view the workouts in it.
+        </Text>
+      ): (<Text style={styles.para}>
+        No workout plans made yet.
+        </Text>)}
 
       {/* Completed Workouts Button */}
       <TouchableOpacity
@@ -172,13 +175,13 @@ return;
       >
         <Text style={styles.completedButtonText}>View Completed Workouts</Text>
       </TouchableOpacity>
-    </View>
+      </View>
     </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: 'green' },
+  container: { flex: 1, padding: 20, backgroundColor: 'black' },
   header: { fontSize: 24, fontWeight: 'bold', color: 'white', marginBottom: 20 },
   para:{color: 'white', fontSize: 16, marginBottom: 20},
   addPlanContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },

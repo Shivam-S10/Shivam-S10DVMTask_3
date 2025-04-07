@@ -44,7 +44,7 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
-      
+      <Text style={styles.header}>Dashboard</Text>
 
       {/* Start New Workout Button */}
       <TouchableOpacity
@@ -54,13 +54,13 @@ export default function DashboardScreen() {
         <Text style={styles.startButtonText}>Start New Workout</Text>
       </TouchableOpacity>
 
-    
+      {/* List of Exercises */}
       {loading ? (
         <ActivityIndicator size="large" color="#007AFF" />
       ) : (
         <FlatList
           data={exercises}
-          keyExtractor={(index) => index.toString()}
+          keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.exerciseItem}
@@ -71,9 +71,12 @@ export default function DashboardScreen() {
                 })
               }
             >
-              <Text>{item.name}</Text>
+              <Text style={styles.exerciseName}>{item.name}</Text>
             </TouchableOpacity>
           )}
+          ListEmptyComponent={
+            <Text style={styles.emptyText}>No exercises found</Text>
+          }
         />
       )}
     </View>
@@ -81,21 +84,29 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: 'yellow' },
+  container: { flex: 1, padding: 20, backgroundColor: 'black' },
   header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   startButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: 'rgba(195, 18, 18, 0.8)',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
     marginVertical: 20,
   },
-  startButtonText: { color: '#fff', fontSize: 18 },
+  startButtonText: { color: 'rgba(120, 187, 141, 0.9)', fontSize: 18 },
   exerciseItem: {
     fontSize: 16,
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     backgroundColor: 'White',
+
   },
+  exerciseName: {
+    fontSize: 16,
+    color: 'white', // White text for workout names
+    fontWeight: 'bold',
+  },
+  emptyText: { textAlign: 'center', color: '#888', marginTop: 20 },
+
 });
