@@ -38,7 +38,7 @@ Object.keys(workoutPlans).filter((planName)=>
       
       <FlatList
         data={selectPlans}
-        keyExtractor={(item) => item}
+        keyExtractor={(item) => item.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.planItem}
@@ -66,11 +66,11 @@ const styles = StyleSheet.create({
   header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   planItem: {
     padding: 15,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#rgba(29, 160, 160, 0.8)',
     borderRadius: 8,
     marginBottom: 10,
   },
   planName: { fontSize: 18, fontWeight: 'bold' },
-  workoutCount: { color: '#888', marginTop: 5 },
+  workoutCount: { color: 'black', marginTop: 5 },
   emptyText: { textAlign: 'center', color: '#888' }
 });

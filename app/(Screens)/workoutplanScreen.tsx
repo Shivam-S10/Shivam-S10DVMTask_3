@@ -1,15 +1,17 @@
 // Update app/(screens)/workoutplanScreen.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity,Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useWorkoutContext } from '../WorkoutContext';
+import {FontAwesome} from '@expo/vector-icons';
 export default function WorkoutPlanScreen() {
   const {workouts, setWorkout}= useWorkoutContext();
   const {timer, setTimer} = useWorkoutContext();
   const {isActive, setIsActive} = useWorkoutContext();
   const params = useLocalSearchParams();
   const router = useRouter();
+  const [showWorkoutView, setShowWorkoutView] = useState(false);
   const {activeWorkout, setActiveWorkout} = useWorkoutContext(); 
 
   useEffect(() => {
@@ -38,12 +40,18 @@ export default function WorkoutPlanScreen() {
     }
   };
 
-  const handleStartWorkout = (workout: any) => {
-    setIsActive(true);
+  const handleWorkoutPress = (workout: any) => {
+    setActiveWorkout(workout);
+    setShowWorkoutView(true);
+    setIsActive(false);
     setTimer(0);
-    setActiveWorkout(workout); //Set the active workout to the selected workout
-    Alert.alert('Workout Started', `You are now doing ${workout.name}`);
   };
+
+  const handleStartWorkout = () => {
+    setIsActive(true);
+    Alert.alert('Workout Started', `You are now doing ${activeWorkout?.name}`);
+  };
+  
   const handleEndWorkout = async (completedExercise: { name: string }) => {
     setIsActive(false); // Stop the timer
     try {
@@ -73,9 +81,13 @@ export default function WorkoutPlanScreen() {
       const completed = existing ? JSON.parse(existing) : [];
       completed.push(completedWorkout);
       await AsyncStorage.setItem('completedWorkouts', JSON.stringify(completed));
-  
-      Alert.alert('Success', 'Workout saved successfully!');
-      router.push('/(Screens)/CompletedWorkouts'); // Navigate to Completed Workouts page
+      router.push({
+        pathname: '/(Screens)/workoutplanScreen',
+        params: { planName: params.planName }
+      });
+      setTimer(0);
+      setActiveWorkout(null);
+      setShowWorkoutView(false);
     } catch (error) {
       console.error('Error saving workout:', error);
       Alert.alert('Error', 'Failed to save workout.');
@@ -87,66 +99,89 @@ export default function WorkoutPlanScreen() {
   
 
   return (
-      <View style={styles.container}>
-       
-        <Text style={styles.header}>
-          {isActive ? activeWorkout?.name : params.planName}
-        </Text>
-     
-        {isActive ? (
-          <View style={styles.timerContainer}>
-            <Text style={styles.timer}>{Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}</Text>
-            <TouchableOpacity style={styles.endButton} onPress={() => handleEndWorkout(activeWorkout)}>
+    <View style={styles.container}>
+      {showWorkoutView ? (
+        // Workout Timer View
+        <View style={styles.timerContainer}>
+          <Text style={[styles.header, { color: 'red' }]}>{activeWorkout?.name}</Text>
+          <Text style={[styles.timer, { color: 'red' }]}>
+            {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}
+          </Text>
+          {!isActive ? (
+           
+            <TouchableOpacity style={styles.startButton} onPress={handleStartWorkout}>
+              <Text style={styles.buttonText}>Start Workout</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.endButton}
+              onPress={() => handleEndWorkout(activeWorkout)}
+            >
               <Text style={styles.endButtonText}>End Workout</Text>
             </TouchableOpacity>
-          </View>
-        ) : (
-          <FlatList
-          data={workouts}
-          keyExtractor={(index) => index.toString()}
-          renderItem={({ item }) => (
-            <View>
-              <TouchableOpacity onPress={() => handleStartWorkout(item)}>
-                <View style={styles.workoutItem}>
-                  <Text style={styles.workoutName}>{item.name}</Text>
-                  <Text style={styles.workoutDetails}>{item.equipment}</Text>
-                </View>
-              </TouchableOpacity>
-              
-              {isActive && (
-                <TouchableOpacity
-                  style={styles.endButton}
-                  onPress={() => handleEndWorkout(item)} // Pass the selected exercise
-                >
-                  <Text style={styles.endButtonText}>End Workout</Text>
-                </TouchableOpacity>
-              )}
-            </View>
           )}
+        </View>
+      ) : (
+        // Workout List View
+        <FlatList
+          data={workouts}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              onPress={() => handleWorkoutPress(item)}
+              style={styles.workoutItem}
+            >
+              <View style={styles.workoutInfo}>
+                <Text style={styles.workoutName}>{item.name}</Text>
+                <Text style={styles.workoutDetails}>Equipment: {item.equipment}</Text>
+              </View>
+              <TouchableOpacity 
+                onPress={() => {
+                  setActiveWorkout(item);
+                  setIsActive(true);
+                  setTimer(0);
+                }}
+              >
+                <FontAwesome name="play" size={24} color="#4CAF50" />
+              </TouchableOpacity>
+            </TouchableOpacity>
+          )}
+          ListEmptyComponent={<Text>No workouts in this plan</Text>}
         />
-        
-        
-      )
-      }
-    
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: 'black' },
-  
+  workoutInfo:{
+    flex:1,
+    backgroundColor: '#rgba(29, 160, 160, 0.8)',
+  },
   header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   workoutItem: {
     padding: 15,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#rgba(29, 160, 160, 0.8)',
     borderRadius: 8,
     marginBottom: 10,
   },
   workoutName: { fontSize: 18, fontWeight: 'bold' },
-  workoutDetails: { color: '#888' },
+  workoutDetails: { color: 'black' },
   timerContainer: { alignItems: 'center', marginTop: 40 },
   timer: { fontSize: 48, fontWeight: 'bold', marginBottom: 20 },
+  startButton:{
+    backgroundColor: 'green',
+    padding: 15,
+    borderRadius: 8,
+    width: 200,
+    alignItems: 'center'
+
+  },
+  buttonText:{
+    color:'white',
+    fontWeight:'bold'
+  },
   endButton: {
     backgroundColor: '#dc3545',
     padding: 15,

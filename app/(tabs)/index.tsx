@@ -44,7 +44,6 @@ export default function DashboardScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Dashboard</Text>
 
       {/* Start New Workout Button */}
       <TouchableOpacity
@@ -60,8 +59,10 @@ export default function DashboardScreen() {
       ) : (
         <FlatList
           data={exercises}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item) => item.id || item.name}
+
           renderItem={({ item }) => (
+          <View style={styles.planItem}>
             <TouchableOpacity
               style={styles.exerciseItem}
               onPress={() =>
@@ -73,6 +74,7 @@ export default function DashboardScreen() {
             >
               <Text style={styles.exerciseName}>{item.name}</Text>
             </TouchableOpacity>
+          </View>
           )}
           ListEmptyComponent={
             <Text style={styles.emptyText}>No exercises found</Text>
@@ -92,6 +94,16 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     marginVertical: 20,
+
+  },
+  planItem: {
+    padding: 15,
+    marginBottom: 10,
+    backgroundColor: '#333',
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   startButtonText: { color: 'rgba(120, 187, 141, 0.9)', fontSize: 18 },
   exerciseItem: {

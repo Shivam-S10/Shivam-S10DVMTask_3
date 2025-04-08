@@ -138,7 +138,8 @@ return;
       {/* List of Plans */}
       <FlatList
   data={Object.keys(workoutPlans)}
-  keyExtractor={(item) => item}
+  keyExtractor={(item) => item.toString()}
+
   renderItem={({ item }) => (
     <View style={styles.planItem}>
       <TouchableOpacity onPress={() => handlePlanPress(item)} style={{ flex: 1 }}>

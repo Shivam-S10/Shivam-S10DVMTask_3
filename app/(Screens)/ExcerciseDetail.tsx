@@ -148,7 +148,7 @@ export default function ExerciseDetail() {
     },
       cancelButtonText: { color: 'white' },
     instructionsContainer: {
-      backgroundColor: '#f0f0f0',},
+      backgroundColor: '#rgba(53, 165, 171, 0.8)',},
       planButtonText: {
         color: 'white',
         fontSize: 16,

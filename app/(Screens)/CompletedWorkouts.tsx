@@ -19,15 +19,20 @@ export default function CompletedWorkoutsScreen() {
     fetchCompletedWorkouts()
   }, []);
 
+
   // Fetch completed workouts from AsyncStorage
   const fetchCompletedWorkouts = async () => {
     try {
       const completed = await AsyncStorage.getItem('completedWorkouts');
-      setCompletedWorkouts(completed ? JSON.parse(completed) : []);
+      const parsedCompleted = completed ? JSON.parse(completed) : [];
+      const sortedCompleted = parsedCompleted.sort((a: { date: string }, b: { date: string }) => 
+        new Date(b.date).getTime() - new Date(a.date).getTime());
+      setCompletedWorkouts(sortedCompleted);
     } catch (error) {
       console.error('Error fetching completed workouts:', error);
     }
   };
+  
 
   // Format duration in minutes and seconds
   const formatDuration = (seconds: number) => {
@@ -46,7 +51,9 @@ export default function CompletedWorkoutsScreen() {
       {/* List of Completed Workouts */}
       <FlatList
   data={completedWorkouts}
-  keyExtractor={( index) => index.toString()}
+  keyExtractor={(item) => `${item.date}_${item.workoutName}_${item.planName}`}
+
+
   renderItem={({ item }: { item: { workoutName?: string; planName?: string; duration?: number; date: string; caloriesBurned?: number; exercises?: string[] } }) => (
     <View style={styles.workoutItem}>
       <Text style={styles.workoutName}>{item.workoutName || 'Unknown Workout'}</Text>
