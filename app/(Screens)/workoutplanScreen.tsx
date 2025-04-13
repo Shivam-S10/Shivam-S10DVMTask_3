@@ -154,15 +154,15 @@ export default function WorkoutPlanScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: 'black' },
+  container: { flex: 1, padding: 20, backgroundColor: '#EBE8DB' },
   workoutInfo:{
     flex:1,
-    backgroundColor: '#rgba(29, 160, 160, 0.8)',
+    backgroundColor: '#F0A04B',
   },
   header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   workoutItem: {
     padding: 15,
-    backgroundColor: '#rgba(29, 160, 160, 0.8)',
+    backgroundColor: '#F0A04B',
     borderRadius: 8,
     marginBottom: 10,
   },

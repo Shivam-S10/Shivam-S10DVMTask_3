@@ -86,10 +86,10 @@ export default function DashboardScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: 'black' },
+  container: { flex: 1, padding: 20, backgroundColor: '#EBE8DB' },
   header: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   startButton: {
-    backgroundColor: 'rgba(195, 18, 18, 0.8)',
+    backgroundColor: 'rgba(12, 53, 191, 0.82)',
     padding: 15,
     borderRadius: 8,
     alignItems: 'center',
@@ -99,13 +99,14 @@ const styles = StyleSheet.create({
   planItem: {
     padding: 15,
     marginBottom: 10,
-    backgroundColor: '#333',
+    backgroundColor: '#88BDF2',
+    borderColor:'EBE8DB',
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  startButtonText: { color: 'rgba(120, 187, 141, 0.9)', fontSize: 18 },
+  startButtonText: { color: 'white', fontSize: 18 },
   exerciseItem: {
     fontSize: 16,
     paddingVertical: 10,

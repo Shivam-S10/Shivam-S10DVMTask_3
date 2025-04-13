@@ -176,15 +176,16 @@ return;
       >
         <Text style={styles.completedButtonText}>View Completed Workouts</Text>
       </TouchableOpacity>
+      
       </View>
     </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: 'black' },
-  header: { fontSize: 24, fontWeight: 'bold', color: 'white', marginBottom: 20 },
-  para:{color: 'white', fontSize: 16, marginBottom: 20},
+  container: { flex: 1, padding: 20, backgroundColor: '#EBE8DB' },
+  header: { fontSize: 24, fontWeight: 'bold', color: 'Black', marginBottom: 20 },
+  para:{color: 'black', fontSize: 16, marginBottom: 20},
   addPlanContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 20 },
   input: {
     flex: 1,
@@ -207,16 +208,21 @@ const styles = StyleSheet.create({
   planItem: {
     padding: 15,
     marginBottom: 10,
-    backgroundColor: '#333',
+    backgroundColor: '#F0A04B',
     borderRadius: 8,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   planName: { color: 'white', fontSize: 18 },
-  planCount: { color: '#aaa', fontSize: 14 },
+  planCount: { color: 'black', fontSize: 14 },
   
-completedButton:{alignItems:'center',backgroundColor:'#007AFF',padding:10,borderRadius:8,marginTop:20},
+completedButton:{alignItems:'center',
+  backgroundColor:'#007AFF',
+  padding:10,
+  borderRadius:8,
+  marginTop:20},
+
   completedButtonText:{color:'white',fontSize:16},
   removeButton: {
     backgroundColor: '#dc3545',

@@ -20,7 +20,12 @@ export default function Layout() {
       
   return (
   
-    <Stack >
+    <Stack 
+    screenOptions={{
+      headerStyle: { backgroundColor: 'white' },
+      headerTintColor: 'black',
+      headerTitleStyle: { fontWeight: 'bold' },
+    }}>
       <Stack.Screen
         name="ExcerciseDetail"
         options={{ title: 'Exercise Details' }}

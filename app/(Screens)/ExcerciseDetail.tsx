@@ -95,14 +95,14 @@ export default function ExerciseDetail() {
   }
   };
   const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20, backgroundColor: 'black' },
+    container: { flex: 1, padding: 20, backgroundColor: '#EBE8DB' },
     addButton: { color: 'white', backgroundColor: 'blue', padding: 15, borderRadius: 8, marginTop: 20 },
     addButtonText: { color: 'white', fontSize: 18, textAlign: 'center' },
-   para : { color: 'white', fontSize: 16, marginBottom: 10 },
+   para : { color: 'black', fontSize: 16, marginBottom: 10 },
   
     scrollContainer: { paddingBottom: 20 }, // Ensures scrollable content
-    header: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 , color: 'white'},
-    instructions: { marginTop: 10, fontSize: 16, lineHeight: 24 },
+    header: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 , color: 'black'},
+    instructions: { marginTop: 10, fontSize: 16, lineHeight: 24},
     modalContainer: {
       flex: 1,
       justifyContent: 'center',
@@ -148,7 +148,7 @@ export default function ExerciseDetail() {
     },
       cancelButtonText: { color: 'white' },
     instructionsContainer: {
-      backgroundColor: '#rgba(53, 165, 171, 0.8)',},
+      backgroundColor: '#FCE7C8',},
       planButtonText: {
         color: 'white',
         fontSize: 16,
